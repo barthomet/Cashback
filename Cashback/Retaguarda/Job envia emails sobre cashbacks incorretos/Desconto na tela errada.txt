@@ -1,0 +1,22 @@
+		declare @texto_cashbak_tela_errada nvarchar(max)
+		set @texto_cashbak_tela_errada =
+		(SELECT STRING_AGG(
+    CONVERT(NVARCHAR(MAX), 
+    CONCAT('FILIAL: ',codigo_filial, + CHAR(13)+CHAR(10) +
+	'TICKET: ', ticket, + CHAR(13)+CHAR(10) +
+	'DATA: ', CONVERT(NVARCHAR(MAX), data_evento, 120), + CHAR(13)+CHAR(10) +
+	'TIPO: ', case when TIPO_EVENTO='11' then 'Desconto no item' when TIPO_EVENTO='12' then 'Desconto no ticket' else 'Verificar' end, + CHAR(13)+CHAR(10) +
+	'HISTORICO: ', historico + CHAR(13)+CHAR(10) + CHAR(13)+CHAR(10) + CHAR(13)+CHAR(10) 
+    )), 
+    ';'
+) AS concatenated_result
+FROM LOJA_EVENTOS_LOG where  HISTORICO like'%motivo desconto: cashback%' and TIPO_EVENTO <>'19' and DATA_EVENTO>=GETDATE()-1)
+		if @texto_cashbak_tela_errada is not null
+		begin
+		EXEC msdb.dbo.sp_send_dbmail
+			@profile_name = 'Servidor_anjuss',
+			@recipients = 'tisuporte4@anjuss.com;tisuporte5@anjuss.com;financeiro@anjuss.com;financeiro2@anjuss.com;financeiro3@anjuss.com;financeiro5@anjuss.com',
+			@body = @texto_cashbak_tela_errada,
+			@subject = 'Desconto de cashback utilizado na tela errada';
+		end
+		else select @texto_cashbak_tela_errada

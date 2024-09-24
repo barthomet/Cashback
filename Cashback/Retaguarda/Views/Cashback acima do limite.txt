@@ -1,0 +1,7 @@
+ CREATE view [dbo].[cashback_acima_limite] as
+select 
+codigo_filial,ticket,cashback_utilizado,CODIGO_CLIENTE,VALOR_ORIGINAL/3 as limite_desconto_cashback,data_evento,historico
+,VALOR_ORIGINAL
+from W_CASHBACK_USADO 
+where VALOR_ORIGINAL/3<CASHBACK_UTILIZADO and data_evento>=getdate()-1
+GO

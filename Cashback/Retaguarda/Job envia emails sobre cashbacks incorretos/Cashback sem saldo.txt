@@ -1,0 +1,27 @@
+
+declare @texto_cashback_sem_saldo nvarchar(max)
+set @texto_cashback_sem_saldo =
+(SELECT STRING_AGG(
+    CONVERT(NVARCHAR(MAX), 
+    CONCAT(
+	'FILIAL: ', codigo_filial, + CHAR(13)+CHAR(10) +
+	'TICKET: ', ticket, + CHAR(13)+CHAR(10) +
+	'CODIGO_CLIENTE: ', codigo_cliente, + CHAR(13)+CHAR(10) +
+	'SALDO CASHBACK: ', valor_bonus, + CHAR(13)+CHAR(10) +
+	'DESCONTO_UTILIZADO: ', cashback_utilizado, + CHAR(13)+CHAR(10) +
+	'DATA: ', CONVERT(NVARCHAR(MAX), data_evento, 120), + CHAR(13)+CHAR(10) +
+	'HISTORICO: ', historico
+    )), 
+    ';'
+) AS concatenated_result
+FROM WR_CASHBACK_SEM_SALDO)
+		if @texto_cashback_sem_saldo is not null
+		begin
+		EXEC msdb.dbo.sp_send_dbmail
+			@profile_name = 'Servidor_anjuss',
+			@recipients = 'tisuporte4@anjuss.com;tisuporte5@anjuss.com;financeiro@anjuss.com;financeiro2@anjuss.com;financeiro3@anjuss.com;financeiro5@anjuss.com',
+			@body = @texto_cashback_sem_saldo,
+			@subject = 'Vendas de cashback sem saldo';
+		end
+		else select @texto_cashback_sem_saldo
+		

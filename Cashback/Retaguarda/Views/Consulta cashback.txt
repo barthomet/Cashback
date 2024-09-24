@@ -1,0 +1,27 @@
+
+CREATE view [dbo].[ANJUSS_CASHBACK_CONSULTA] as
+with gerados as(
+select codigo_cliente,SUM(VALOR_BONUS) as saldo from ANJUSS_CASHBACKS_GERADOS  group by codigo_cliente ),
+usado as(select sum(CASHBACK_UTILIZADO) as usado,CODIGO_CLIENTE from W_CASHBACK_USADO  group by codigo_cliente),
+
+expirado as(select a.CODIGO_CLIENTE,sum(valor_bonus) as SALDO_EXPIRADO from ANJUSS_CASHBACKS_GERADOS a 
+left join W_CASHBACK_USADO b on a.codigo_cliente=b.codigo_cliente 
+where status='expirado' and (cast(data_evento as date)>data_expiracao or data_expiracao is null or data_evento is null)  group by a.codigo_cliente),
+
+data_expiracao as(select min(DATA_EXPIRACAO) as DATA_EXPIRACAO,CODIGO_CLIENTE from ANJUSS_CASHBACKS_GERADOS where STATUS='ativo' group by CODIGO_CLIENTE)
+
+select a.CODIGO_CLIENTE,trim(CLIENTE_VAREJO) as CLIENTE_VAREJO,COD_FILIAL as FILIAL_CADASTRO,
+ case when (usado is null and SALDO_EXPIRADO is null) then saldo when (saldo_expirado is null) then saldo-usado when (usado is null) then saldo-SALDO_EXPIRADO else saldo-usado-saldo_expirado end as SALDO,
+
+--case when TOTAL_CASHBACK_UTILIZADO is null then BONUS_TOTAL when TOTAL_CASHBACK_UTILIZADO>0 then BONUS_TOTAL - TOTAL_CASHBACK_UTILIZADO end as SALDO,
+case when SALDO_EXPIRADO is null then (select SALDO_EXPIRADO='0') else SALDO_EXPIRADO end as SALDO_EXPIRADO,
+case when usado is null then (select saldo='0') else usado end as TOTAL_CASHBACK_UTILIZADO,
+CPF_CGC,CONCAT('(',trim(DDD_CELULAR),') ',trim(CELULAR)) as CELULAR,EMAIL,SEXO,concat(datepart(day,ANIVERSARIO),'/',DATEPART(month,aniversario),'/',datepart(year,aniversario)) as ANIVERSARIO,
+concat (datepart (day,F.DATA_EXPIRACAO),'/',datepart (month,F.DATA_EXPIRACAO),'/',datepart (year,F.DATA_EXPIRACAO)) as DATA_EXPIRACAO 
+from gerados a 
+join clientes_varejo b on a.codigo_cliente=b.CODIGO_CLIENTE --saldo,cpf,aniversário,telefone/email/genero
+left join usado c on a.CODIGO_CLIENTE=c.codigo_cliente
+left join expirado d on a.CODIGO_CLIENTE=d.codigo_cliente
+join filiais e on b.FILIAL=e.FILIAL
+left join data_expiracao F on a.CODIGO_CLIENTE=f.CODIGO_CLIENTE where a.CODIGO_CLIENTE<>'000136' --and a.CODIGO_CLIENTE='15855018911      '
+--group by a.codigo_cliente,cliente_varejo,CPF_CGC,ANIVERSARIO,DDD_CELULAR,CELULAR,EMAIL,SEXO,TOTAL_CASHBACK_UTILIZADO,SALDO_EXPIRADO,COD_FILIAL,F.DATA_EXPIRACAO

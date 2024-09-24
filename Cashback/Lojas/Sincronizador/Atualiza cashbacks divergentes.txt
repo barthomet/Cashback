@@ -1,0 +1,17 @@
+UPDATE tgt
+SET
+    tgt.valor_bonus = src.valor_bonus,
+    tgt.valor_venda = src.valor_venda,
+    tgt.vendedor = src.vendedor,
+    tgt.codigo_cliente = src.codigo_cliente,
+   tgt.status=src.status
+FROM matriz.linx_anjuss.dbo.ANJUSS_CASHBACKS_GERADOS AS tgt
+JOIN ANJUSS_CASHBACKS_GERADOS AS src
+ON tgt.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS = src.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS
+WHERE
+    tgt.valor_bonus <> src.valor_bonus OR 
+    tgt.valor_venda <> src.valor_venda OR 
+    tgt.vendedor COLLATE SQL_Latin1_General_CP1_CI_AS <> src.vendedor COLLATE SQL_Latin1_General_CP1_CI_AS OR  
+    tgt.codigo_cliente COLLATE SQL_Latin1_General_CP1_CI_AS <> src.codigo_cliente COLLATE SQL_Latin1_General_CP1_CI_AS OR
+    tgt.status  COLLATE SQL_Latin1_General_CP1_CI_AS <> src.STATUS  COLLATE SQL_Latin1_General_CP1_CI_AS and
+    tgt.status<>'UTILIZADO';

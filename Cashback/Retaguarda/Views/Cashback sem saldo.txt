@@ -1,0 +1,14 @@
+CREATE view [dbo].[WR_CASHBACK_SEM_SALDO] as
+
+with cashback_sem_saldo as(
+select a.codigo_cliente,sum(valor_bonus) as VALOR_BONUS,CASHBACK_UTILIZADO
+from W_CASHBACK_USADO a
+join ANJUSS_CASHBACKS_GERADOS b on a.codigo_cliente=b.codigo_cliente
+--where CASHBACK_UTILIZADO>VALOR_BONUS --and a.CODIGO_CLIENTE='09009336905   '
+group by a.codigo_cliente,CASHBACK_UTILIZADO
+)
+
+select codigo_filial,ticket,a.codigo_cliente,VALOR_BONUS,b.cashback_utilizado,data_evento,historico
+from W_CASHBACK_USADO a join cashback_sem_saldo b on a.codigo_cliente=b.codigo_cliente
+where b.cashback_utilizado>valor_bonus and data_evento>=CAST(DATEADD(DAY, 0, GETDATE()) AS DATE)
+GO
