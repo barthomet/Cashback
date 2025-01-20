@@ -5,8 +5,8 @@ SET
     tgt.vendedor = src.vendedor,
     tgt.codigo_cliente = src.codigo_cliente,
    tgt.status=src.status
-FROM matriz.linx_anjuss.dbo.ANJUSS_CASHBACKS_GERADOS AS tgt
-JOIN ANJUSS_CASHBACKS_GERADOS AS src
+FROM matriz.dbo.CASHBACKS_GERADOS AS tgt
+JOIN CASHBACKS_GERADOS AS src
 ON tgt.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS = src.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS
 WHERE
     tgt.valor_bonus <> src.valor_bonus OR 
