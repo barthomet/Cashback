@@ -18,7 +18,7 @@ FROM cashback_acima_limite)
 		if @texto_cashbak_excede_limite is not null
 		begin
 		EXEC msdb.dbo.sp_send_dbmail
-			@profile_name = 'Servidor_anjuss',
+			@profile_name = 'Servidor',
 			@recipients = 'tisuporte4@anjuss.com;tisuporte5@anjuss.com;financeiro@anjuss.com;financeiro2@anjuss.com;financeiro3@anjuss.com;financeiro5@anjuss.com',
 			@body = @texto_cashbak_excede_limite,
 			@subject = 'Vendas de cashback acima do limite de desconto';
