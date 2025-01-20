@@ -1,2 +1,2 @@
 update a set status='EXPIRADO'
-from ANJUSS_CASHBACKS_GERADOS a where data_expiracao <CAST(DATEADD(DAY, 0, GETDATE()) AS DATE)
+from CASHBACKS_GERADOS a where data_expiracao <CAST(DATEADD(DAY, 0, GETDATE()) AS DATE)
