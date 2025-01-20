@@ -1,6 +1,6 @@
 DELETE FROM tgt
-FROM matriz.linx_anjuss.dbo.ANJUSS_CASHBACKS_GERADOS AS tgt
-LEFT JOIN ANJUSS_CASHBACKS_GERADOS AS src
+FROM matriz.dbo.CASHBACKS_GERADOS AS tgt
+LEFT JOIN CASHBACKS_GERADOS AS src
 ON tgt.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS = src.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS
 WHERE src.venda_filial IS NULL
 AND tgt.codigo_filial = CODIGO DA LOJA;
