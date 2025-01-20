@@ -1,11 +1,11 @@
-INSERT INTO matriz.linx_anjuss.dbo.ANJUSS_CASHBACKS_GERADOS
+INSERT INTO matriz.dbo.CASHBACKS_GERADOS
 
 SELECT * 
-FROM ANJUSS_CASHBACKS_GERADOS AS src
+FROM CASHBACKS_GERADOS AS src
 WHERE NOT EXISTS (
     SELECT 1
  FROM
- matriz.linx_anjuss.dbo.ANJUSS_CASHBACKS_GERADOS AS tgt
+ matriz.linx_anjuss.dbo.CASHBACKS_GERADOS AS tgt
     
 WHERE tgt.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS = src.venda_filial COLLATE SQL_Latin1_General_CP1_CI_AS
 );
