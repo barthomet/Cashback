@@ -1,4 +1,4 @@
-USE [LINXPOS_ANJUSS_MARACANA]
+USE [DB]
 GO
 
 /****** Object:  Trigger [dbo].[TRG_INSERT_CASHBACK]    Script Date: 24/09/2024 10:20:03 ******/
@@ -14,7 +14,7 @@ ON [dbo].[LOJA_VENDA]
 AFTER INSERT, UPDATE
 AS
 BEGIN
-    -- Insere novos registros na tabela ANJUSS_CASHBACKS_GERADOS se ainda n„o existirem
+    -- Insere novos registros na tabela ANJUSS_CASHBACKS_GERADOS se ainda n√£o existirem
     INSERT INTO ANJUSS_CASHBACKS_GERADOS (VENDA_FILIAL, TICKET, CODIGO_FILIAL, CODIGO_CLIENTE, VALOR_VENDA, DATA_BONUS, DATA_EXPIRACAO, VALOR_BONUS, STATUS,vendedor)
     SELECT 
         CONCAT(TRIM(i.CODIGO_FILIAL), ' - ', i.TICKET) AS VENDA_FILIAL,
