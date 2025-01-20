@@ -1,5 +1,5 @@
 
-CREATE view [dbo].[ANJUSS_CASHBACK_CONSULTA] as
+CREATE view [dbo].[CASHBACK_CONSULTA] as
 with gerados as(
 select codigo_cliente,SUM(VALOR_BONUS) as saldo from ANJUSS_CASHBACKS_GERADOS  group by codigo_cliente ),
 usado as(select sum(CASHBACK_UTILIZADO) as usado,CODIGO_CLIENTE from W_CASHBACK_USADO  group by codigo_cliente),
@@ -19,7 +19,7 @@ case when usado is null then (select saldo='0') else usado end as TOTAL_CASHBACK
 CPF_CGC,CONCAT('(',trim(DDD_CELULAR),') ',trim(CELULAR)) as CELULAR,EMAIL,SEXO,concat(datepart(day,ANIVERSARIO),'/',DATEPART(month,aniversario),'/',datepart(year,aniversario)) as ANIVERSARIO,
 concat (datepart (day,F.DATA_EXPIRACAO),'/',datepart (month,F.DATA_EXPIRACAO),'/',datepart (year,F.DATA_EXPIRACAO)) as DATA_EXPIRACAO 
 from gerados a 
-join clientes_varejo b on a.codigo_cliente=b.CODIGO_CLIENTE --saldo,cpf,anivers·rio,telefone/email/genero
+join clientes_varejo b on a.codigo_cliente=b.CODIGO_CLIENTE --saldo,cpf,anivers√°rio,telefone/email/genero
 left join usado c on a.CODIGO_CLIENTE=c.codigo_cliente
 left join expirado d on a.CODIGO_CLIENTE=d.codigo_cliente
 join filiais e on b.FILIAL=e.FILIAL
